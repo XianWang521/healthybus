@@ -5,6 +5,11 @@ import 'pay.dart';
 import 'balance.dart';
 
 class UserMain extends StatefulWidget {
+  final String username;
+  const UserMain({
+    Key key,
+    @required this.username,
+  }) : super(key: key);
   @override
   State<StatefulWidget> createState() => BottomNavigationWidgetState();
 }
@@ -17,7 +22,7 @@ class BottomNavigationWidgetState extends State<UserMain> {
   @override
   void initState() {
     list
-      ..add(UserScreen())
+      ..add(UserScreen(username: widget.username))
       ..add(PayScreen())
       ..add(BalanceScreen())
       ..add(TripScreen());

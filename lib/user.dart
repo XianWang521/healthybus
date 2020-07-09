@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 
 class UserScreen extends StatelessWidget{
+  final String username;
+  const UserScreen({
+    Key key,
+    @required this.username,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +32,24 @@ class UserScreen extends StatelessWidget{
             ),
           ),
         ],
+      ),
+
+      body: new SingleChildScrollView(
+        child: new Container(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              new Text(
+                'Hi! ${this.username}',
+                style: new TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+              ),
+              new SizedBox(
+                height: 30,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

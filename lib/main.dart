@@ -35,6 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  TextEditingController _username = TextEditingController();
+  TextEditingController _pass = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -102,6 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: _toggle,
                   ),
                 ),
+                controller: this._username,
+                onChanged: (value) {
+                  this.setState(() {
+                    this._username.text = value;
+                  });
+                },
                 obscureText: eye,
               ),
               new SizedBox(
@@ -118,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   splashColor: Colors.white54,
                   onPressed: () {
                     Navigator.of(context).pushAndRemoveUntil(
-                        new MaterialPageRoute(builder: (context) => new UserMain()
+                        new MaterialPageRoute(builder: (context) => new UserMain(username: this._username.text)
                         ), (route) => route == null);
                   },
                 ),
