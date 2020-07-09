@@ -28,6 +28,67 @@ class BalanceScreen extends StatelessWidget{
           ),
         ],
       ),
+
+      body: new SingleChildScrollView(
+        child: new Container(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              new Text(
+                'Your balance：',
+                style: new TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+              ),
+              new SizedBox(
+                height: 30,
+              ),
+              new Row(
+                children: <Widget>[
+                  RaisedButton(
+                    color: Colors.blue,
+                    highlightColor: Colors.blue[700],
+                    colorBrightness: Brightness.dark,
+                    splashColor: Colors.grey,
+                    child: Text("Withdraw"),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    onPressed: ()=>{},
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  RaisedButton(
+                    color: Colors.blue,
+                    highlightColor: Colors.blue[700],
+                    colorBrightness: Brightness.dark,
+                    splashColor: Colors.grey,
+                    child: Text("Top up"),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    onPressed: ()=>{},
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  RaisedButton(
+                    color: Colors.blue,
+                    highlightColor: Colors.blue[700],
+                    colorBrightness: Brightness.dark,
+                    splashColor: Colors.grey,
+                    child: Text("Link account"),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    onPressed: ()=>{},
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
