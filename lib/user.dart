@@ -7,6 +7,7 @@ class UserScreen extends StatelessWidget{
     Key key,
     @required this.username,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

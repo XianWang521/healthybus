@@ -23,7 +23,7 @@ class BottomNavigationWidgetState extends State<UserMain> {
   void initState() {
     list
       ..add(UserScreen(username: widget.username))
-      ..add(PayScreen())
+      ..add(PayScreen(username: widget.username, healthcode: 1,))
       ..add(BalanceScreen())
       ..add(TripScreen());
     super.initState();

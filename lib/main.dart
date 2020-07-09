@@ -89,6 +89,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: new InputDecoration(
                   labelText: "Phone Number",
                 ),
+                controller: this._username,
+                /*onChanged: (value) {
+                  this.setState(() {
+                    this._username.text = value;
+                  });
+                },*/
               ),
               new SizedBox(
                 height: 30,
@@ -105,12 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: _toggle,
                   ),
                 ),
-                controller: this._username,
-                onChanged: (value) {
-                  this.setState(() {
-                    this._username.text = value;
-                  });
-                },
                 obscureText: eye,
               ),
               new SizedBox(
