@@ -16,6 +16,26 @@ class _Register extends State<Register> {
     });
   }
 
+  //定义变量
+  Timer _timer;
+  //倒计时数值
+  var countdownTime = 0;
+
+  //倒计时方法
+  startCountdown() {
+    countdownTime = 60;
+    final call = (timer) {
+      setState(() {
+        if (countdownTime < 1) {
+          _timer.cancel();
+        } else {
+          countdownTime -= 1;
+        }
+      });
+    };
+    _timer = Timer.periodic(Duration(seconds: 1), call);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +94,19 @@ class _Register extends State<Register> {
                 autocorrect: false,
                 decoration: new InputDecoration(
                   labelText: "Captcha",
+                  suffix: new GestureDetector(
+                    onTap: (){
+                      if (countdownTime==0){
+                        startCountdown();
+                      }
+                    },
+                    child: Text(
+                      countdownTime>0?"${countdownTime}s后重新获取":"获取验证码",
+                      style: TextStyle(
+                          color: Colors.grey//Color.fromRGBO(21, 201, 187, 1)
+                      ),
+                    ),
+                  )
                 ),
               ),
               new SizedBox(
@@ -125,4 +158,15 @@ class _Register extends State<Register> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_timer != null) {
+      _timer.cancel();
+      _timer = null;
+    }
+  }
+
 }
+
