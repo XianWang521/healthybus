@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'register.dart';
-import 'user.dart';
+import 'usermain.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
@@ -117,10 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   shape: StadiumBorder(),
                   splashColor: Colors.white54,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UserMain()),
-                    );
+                    Navigator.of(context).pushAndRemoveUntil(
+                        new MaterialPageRoute(builder: (context) => new UserMain()
+                        ), (route) => route == null);
                   },
                 ),
               ),

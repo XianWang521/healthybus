@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 
-class UserScreen extends StatelessWidget{
+class PayScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        title: Text('User Info'),
+      appBar: AppBar(
+        title: Text('Pay'),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: <Widget>[

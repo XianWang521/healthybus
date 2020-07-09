@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 
-class UserScreen extends StatelessWidget{
+class TripScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        title: Text('User Info'),
+      appBar: AppBar(
+        title: Text('Trip'),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: <Widget>[
@@ -21,7 +21,7 @@ class UserScreen extends StatelessWidget{
                 Navigator.of(context).pushAndRemoveUntil(
                     new MaterialPageRoute(builder: (context) => new HomeScreen()
                     ), (route) => route == null);
-              },
+                },
               highlightColor: Colors.black,
               shape: StadiumBorder(),
             ),
