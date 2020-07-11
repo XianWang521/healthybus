@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'logout.dart';
 
 class UserScreen extends StatelessWidget{
   final String username;
@@ -24,9 +25,7 @@ class UserScreen extends StatelessWidget{
                 style: new TextStyle(color: Colors.grey, fontSize: 17),
               ),
               onPressed: (){
-                Navigator.of(context).pushAndRemoveUntil(
-                    new MaterialPageRoute(builder: (context) => new HomeScreen()
-                    ), (route) => route == null);
+                Logout.logout(context);
               },
               highlightColor: Colors.black,
               shape: StadiumBorder(),
