@@ -88,9 +88,9 @@ class BottomNavigationWidgetState extends State<UserMain> {
 
  */
 import 'package:flutter/material.dart';
-import 'user.dart';
+import 'user/user.dart';
 import 'trip.dart';
-import 'pay.dart';
+import 'pay/pay.dart';
 import 'balance.dart';
 import 'util/passengerInfo_util.dart';
 
@@ -195,7 +195,7 @@ class BottomNavigationWidgetState extends State<UserMain> with TickerProviderSta
               if (index == 0){
                 tabBody = UserScreen(animationController: animationController);
               }else if(index == 1){
-                tabBody = PayScreen(username: widget.username, healthcode: 2,);
+                tabBody = PayScreen(animationController: animationController, username: widget.username, healthcode: 2,);
               }else if(index == 2){
                 tabBody = BalanceScreen();
               }else{

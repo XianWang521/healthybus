@@ -1,6 +1,78 @@
-import 'package:flutter/material.dart';
-import 'logout.dart';
 /*
+import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import '../main.dart';
+
+class PayScreen extends StatelessWidget{
+  final String username;
+  final int healthcode;
+  const PayScreen({
+    Key key,
+    @required this.username,
+    @required this.healthcode,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final bodyHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom;
+    Color c;
+    if(this.healthcode == 2){
+      c = Colors.red;
+    }
+    else if(this.healthcode == 1){
+      c = Colors.yellow;
+    }
+    else{
+      c = Colors.green;
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pay'),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: <Widget>[
+          new Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 20, 0),
+            child: new FlatButton(
+              child: new Text(
+                "Log out",
+                style: new TextStyle(color: Colors.grey, fontSize: 17),
+              ),
+              onPressed: (){
+                Navigator.of(context).pushAndRemoveUntil(
+                    new MaterialPageRoute(builder: (context) => new HomeScreen()
+                    ), (route) => route == null);
+              },
+              highlightColor: Colors.black,
+              shape: StadiumBorder(),
+            ),
+          ),
+        ],
+      ),
+
+      body: new SingleChildScrollView(
+        child: new Container(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          child: Center(
+            child:
+              QrImage(
+                data: '${this.username},${this.healthcode}',
+                size: 250,
+                gapless: true,
+                errorCorrectionLevel: QrErrorCorrectLevel.Q,
+                foregroundColor: c,
+              )
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+ */
+/*
+import 'package:flutter/material.dart';
 class UserScreen extends StatelessWidget{
   final String username;
   const UserScreen({
@@ -56,21 +128,24 @@ class UserScreen extends StatelessWidget{
 }
 
  */
-import 'ui_view/infocard_view.dart';
-import 'ui_view/balance_view.dart';
-import 'ui_view/title_view.dart';
+import 'ui_view/qr_view.dart';
 import 'package:flutter/material.dart';
-import 'ui_view/app_theme.dart';
+import '../logout.dart';
+import '../app_theme.dart';
+import '../pay/ui_view/qr_view.dart';
+import '../pay/ui_view/notice_view.dart';
 
-class UserScreen extends StatefulWidget {
-  const UserScreen({Key key, this.animationController}) : super(key: key);
+class PayScreen extends StatefulWidget {
+  const PayScreen({Key key, this.animationController, this.username, this.healthcode}) : super(key: key);
 
+  final String username;
+  final int healthcode;
   final AnimationController animationController;
   @override
-  _UserScreenState createState() => _UserScreenState();
+  _PayScreenState createState() => _PayScreenState();
 }
 
-class _UserScreenState extends State<UserScreen>
+class _PayScreenState extends State<PayScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
 
@@ -111,66 +186,34 @@ class _UserScreenState extends State<UserScreen>
     super.initState();
   }
 
-  void addAllListData() {
-    const int count = 5;
 
-    /*listViews.add(
-      TitleView(
-        titleTxt: 'Your program',
-        subTxt: 'Details',
+
+  void addAllListData() {
+    const int count = 2;
+
+    listViews.add(
+      NoticeView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+            Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
+        healthcode: widget.healthcode,
       ),
     );
 
-     */
-
     listViews.add(
-      InfocardView(
+      QRView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
             Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
-      ),
-    );
-    listViews.add(
-      BalanceView(
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-            Interval((1 / count) * 3, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
+        username: widget.username,
+        healthcode: widget.healthcode,
       ),
     );
 
-    listViews.add(
-      TitleView(
-        titleTxt: 'More details',
-        subTxt: 'edit',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-            Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
-      ),
-    );
-
-    /*
-    listViews.add(
-      AreaListView(
-        mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-                parent: widget.animationController,
-                curve: Interval((1 / count) * 5, 1.0,
-                    curve: Curves.fastOutSlowIn))),
-        mainScreenAnimationController: widget.animationController,
-      ),
-    );
-    */
   }
 
   Future<bool> getData() async {
@@ -267,7 +310,7 @@ class _UserScreenState extends State<UserScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'User Info',
+                                  'Pay',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,
