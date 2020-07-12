@@ -189,7 +189,7 @@ class _PayScreenState extends State<PayScreen>
 
 
   void addAllListData() {
-    const int count = 2;
+    const int count = 3;
 
     listViews.add(
       NoticeView(

@@ -195,7 +195,7 @@ class BottomNavigationWidgetState extends State<UserMain> with TickerProviderSta
               if (index == 0){
                 tabBody = UserScreen(animationController: animationController);
               }else if(index == 1){
-                tabBody = PayScreen(animationController: animationController, username: widget.username, healthcode: 2,);
+                tabBody = PayScreen(animationController: animationController, username: widget.username, healthcode: 0,);
               }else if(index == 2){
                 tabBody = BalanceScreen();
               }else{
