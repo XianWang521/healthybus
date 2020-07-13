@@ -6,8 +6,10 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'util/toast_util.dart';
 import 'util/server_util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'util/Sp_util.dart';
 import 'usermain.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -124,6 +126,8 @@ class _Register extends State<Register> {
       showLoadingDialog();
       Dio dio = new Dio();
       dio.options.baseUrl = Server.base;
+      var cookieJar = CookieJar();
+      dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
       try {
         print(phoneController.text);
         print(vericodeController.text);
@@ -135,12 +139,22 @@ class _Register extends State<Register> {
           String msg = response.data["msg"];
           print(msg);
           if (msg == "register success") {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString("phone", phoneController.text);
-            prefs.setString("password", passController.text);
-            Navigator.of(context).pushAndRemoveUntil(
-                new MaterialPageRoute(builder: (context) => new UserMain(username: phoneController.text)
-                ), (route) => route == null);
+            response = await dio.post("/passenger_login", data: {"phone":phoneController.text, "password":passController.text});
+            if (response.data["msg"] == "login success"){
+              response = await dio.get("/get_info");
+              SpUtil.preferences.setString("phone", phoneController.text);
+              SpUtil.preferences.setString("password", passController.text);
+              SpUtil.preferences.setString("username", usernameController.text);
+              SpUtil.preferences.setDouble("balance", response.data["info"][2]);
+              SpUtil.preferences.setInt("healthcode", response.data["info"][3]);
+              SpUtil.preferences.setString("id_pay", response.data["info"][4]);
+              Navigator.of(context).pushAndRemoveUntil(
+                  new MaterialPageRoute(builder: (context) => new UserMain(username: SpUtil.preferences.getString("username"))
+                  ), (route) => route == null);
+            }
+            else {
+              ToastUtil.toast(context, "登录错误");
+            }
           }else{
             ToastUtil.toast(context, "未知错误");
           }

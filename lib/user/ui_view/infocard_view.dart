@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_theme.dart';
+import '../../util/passengetInfo_util.dart';
 
 class InfocardView extends StatelessWidget {
   final AnimationController animationController;
@@ -10,6 +11,21 @@ class InfocardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int healthcode = passengerInfo().getHealthcode();
+    IconData healthicon;
+    Color healthcolor;
+
+    if (healthcode == 0){
+      healthicon = Icons.check_circle;
+      healthcolor = Colors.green;
+    } else if (healthcode == 1){
+      healthicon = Icons.error;
+      healthcolor = Colors.amber;
+    } else {
+      healthicon = Icons.cancel;
+      healthcolor = Colors.red;
+    }
+
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -46,7 +62,7 @@ class InfocardView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        " Hi, nagi !\n",
+                        " Hi, "+passengerInfo().getUsername()+" !\n",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontFamily: AppTheme.fontName,
@@ -73,7 +89,7 @@ class InfocardView extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 4),
                                   child: Text(
-                                    " 13131465139",
+                                    " "+passengerInfo().getPhone(),
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       fontFamily: AppTheme.fontName,
@@ -137,10 +153,8 @@ class InfocardView extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(0.0),
                                 child: Icon(
-                                  Icons.check_circle,
-                                  //Icons.cancel,
-                                  //Icons.error
-                                  color: Colors.green,//HexColor("#6F56E8"),
+                                  healthicon,
+                                  color: healthcolor,
                                   size: 44,
                                 ),
                               ),

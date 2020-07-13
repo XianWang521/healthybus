@@ -1,0 +1,85 @@
+import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'Sp_util.dart';
+import 'server_util.dart';
+import 'toast_util.dart';
+class passengerInfo{
+  String phone = "";
+  String username = "";
+  String password = "";
+  double balance = 0.0;
+  int healthcode = 0;
+  String id_pay = "";
+
+  void initget(context) async{
+    if (SpUtil.preferences.containsKey("phone")&&SpUtil.preferences.containsKey("password")){
+      this.phone = SpUtil.preferences.getString("phone");
+      this.password = SpUtil.preferences.getString("password");
+
+      var dio = Dio();
+      dio.options.baseUrl = Server.base;
+      var cookieJar = CookieJar();
+      dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
+      try {
+        Response response = await dio.post("/passenger_login", data: {"phone":this.phone, "password":this.password});
+        if (response.data["msg"] == "login success"){
+          response = await dio.get("/get_info");
+          this.phone = response.data["info"][0];
+          this.username = response.data["info"][1];
+          this.balance = response.data["info"][2];
+          this.healthcode = response.data["info"][3];
+          this.id_pay = response.data["info"][4];
+          print("phone: "+this.phone );
+          print("username: "+this.username);
+          print("balance: "+this.balance.toString());
+          print("healthcode: "+this.healthcode.toString());
+          print("id_pay: " + this.id_pay);
+
+          SpUtil.preferences.setString("phone", this.phone);
+          SpUtil.preferences.setString("username", this.username);
+          SpUtil.preferences.setDouble("balance", this.balance);
+          SpUtil.preferences.setInt("healthcode", this.healthcode);
+          SpUtil.preferences.setString("id_pay", this.id_pay);
+        }
+      } catch (e) {
+        ToastUtil.toast(context, "网络连接错误");
+      }
+    }
+  }
+
+  String getPhone() {
+    if (SpUtil.preferences.containsKey("phone")){
+      return SpUtil.preferences.getString("phone");
+    }
+    return this.phone;
+  }
+
+  String getUsername(){
+    if (SpUtil.preferences.containsKey("username")){
+      return SpUtil.preferences.getString("username");
+    }
+    return this.username;
+  }
+
+   double getBalance(){
+     if (SpUtil.preferences.containsKey("balance")){
+       return SpUtil.preferences.getDouble("balance");
+     }
+     return this.balance;
+   }
+
+   int getHealthcode(){
+     if (SpUtil.preferences.containsKey("healthcode")){
+       return SpUtil.preferences.getInt("healthcode");
+     }
+     return this.healthcode;
+   }
+
+   String getIdpay(){
+     if (SpUtil.preferences.containsKey("id_pay")){
+       return SpUtil.preferences.getString("id_pay");
+     }
+     return this.id_pay;
+   }
+}

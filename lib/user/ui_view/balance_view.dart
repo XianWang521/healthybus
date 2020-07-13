@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../app_theme.dart';
+import '../../util/passengetInfo_util.dart';
 
 class BalanceView extends StatelessWidget {
   final AnimationController animationController;
@@ -87,7 +88,7 @@ class BalanceView extends StatelessWidget {
                                       right: 16,
                                     ),
                                     child: Text(
-                                      "¥0.00",
+                                      "¥"+passengerInfo().getBalance().toString()+"0",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: AppTheme.fontName,

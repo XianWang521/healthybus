@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'usermain.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:dio/dio.dart';
 import 'util/toast_util.dart';
 import 'util/server_util.dart';
 import 'login.dart';
+import 'util/Sp_util.dart';
 
 void main(List<String> args) {
+  WidgetsFlutterBinding.ensureInitialized();
+  realRunApp();
+}
+
+void realRunApp() async {
+  bool success = await SpUtil.getInstance();
+  print("init-"+success.toString());
   runApp(MyApp());
 }
 
@@ -52,17 +61,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //异步自动登录
   Future<dynamic> Auto_login() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey("phone")&&prefs.containsKey("password")){
-      String ph = prefs.getString("phone");
-      String pwd = prefs.getString("password");
+    if (SpUtil.preferences.containsKey("phone")&&SpUtil.preferences.containsKey("password")){
+      String ph = SpUtil.preferences.getString("phone");
+      String pwd = SpUtil.preferences.getString("password");
       if(ph!=null && pwd!=null){
         Dio dio = new Dio();
         dio.options.baseUrl = Server.base;
+        var cookieJar = CookieJar();
+        dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
         try {
           Response response = await dio.post("/passenger_login", data: {"phone":ph, "password":pwd});
           print(response.data["msg"]);
           if (response.data["msg"] == "login success"){
+            response = await dio.get("/get_info");
+            SpUtil.preferences.setString("username", response.data["info"][1]);
+            SpUtil.preferences.setDouble("balance", response.data["info"][2]);
+            SpUtil.preferences.setInt("healthcode", response.data["info"][3]);
+            SpUtil.preferences.setString("id_pay", response.data["info"][4]);
             return ph;
           }
         } catch (e) {
@@ -73,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     }
-    prefs.clear();
+    SpUtil.preferences.clear();
     return null;
   }
 
