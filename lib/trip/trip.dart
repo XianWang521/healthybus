@@ -71,6 +71,9 @@ class _TripScreenState extends State<TripScreen>
       ToastUtil.toast(context, "网络连接错误");
     }
 
+
+
+
     listViews.add(
       TripCardView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
