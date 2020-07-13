@@ -91,7 +91,7 @@ import 'package:flutter/material.dart';
 import 'user/user.dart';
 import 'trip.dart';
 import 'pay/pay.dart';
-import 'balance.dart';
+import 'balance/balance.dart';
 import 'util/passengerInfo_util.dart';
 
 class UserMain extends StatefulWidget {
@@ -197,7 +197,7 @@ class BottomNavigationWidgetState extends State<UserMain> with TickerProviderSta
               }else if(index == 1){
                 tabBody = PayScreen(animationController: animationController, username: widget.username, healthcode: 0,);
               }else if(index == 2){
-                tabBody = BalanceScreen();
+                tabBody = BalanceScreen(animationController: animationController);
               }else{
                 tabBody = TripScreen();
               }

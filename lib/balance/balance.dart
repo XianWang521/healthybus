@@ -1,20 +1,18 @@
-import 'ui_view/qr_view.dart';
 import 'package:flutter/material.dart';
 import '../logout.dart';
 import '../app_theme.dart';
-import 'ui_view/notice_view.dart';
+import 'ui_view/balancecard_view.dart';
+import 'ui_view/link_view.dart';
 
-class PayScreen extends StatefulWidget {
-  const PayScreen({Key key, this.animationController, this.username, this.healthcode}) : super(key: key);
+class BalanceScreen extends StatefulWidget {
+  const BalanceScreen({Key key, this.animationController}) : super(key: key);
 
-  final String username;
-  final int healthcode;
   final AnimationController animationController;
   @override
-  _PayScreenState createState() => _PayScreenState();
+  _BalanceScreenState createState() => _BalanceScreenState();
 }
 
-class _PayScreenState extends State<PayScreen>
+class _BalanceScreenState extends State<BalanceScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
 
@@ -61,25 +59,22 @@ class _PayScreenState extends State<PayScreen>
     const int count = 3;
 
     listViews.add(
-      NoticeView(
+      BalanceCardView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
             Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
-        healthcode: widget.healthcode,
       ),
     );
 
     listViews.add(
-      QRView(
+      LinkView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
             Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
-        username: widget.username,
-        healthcode: widget.healthcode,
       ),
     );
 
@@ -179,7 +174,7 @@ class _PayScreenState extends State<PayScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Pay',
+                                  'Balance',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,
