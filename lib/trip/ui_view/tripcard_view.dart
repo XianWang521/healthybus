@@ -99,26 +99,6 @@ class TripCardView extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 25,
-                                      bottom: 12,
-                                      top: 4,
-                                      right: 16,
-                                    ),
-                                    child: Text(
-                                      "Available",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontFamily: AppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20,
-                                        letterSpacing: 0.0,
-                                        color: AppTheme.grey
-                                            .withOpacity(0.5),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

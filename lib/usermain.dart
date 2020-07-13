@@ -199,7 +199,7 @@ class BottomNavigationWidgetState extends State<UserMain> with TickerProviderSta
               }else if(index == 2){
                 tabBody = BalanceScreen(animationController: animationController);
               }else{
-                tabBody = TripScreen(animationController: animationController);
+                tabBody = TripScreen(animationController: animationController, username: widget.username);
               }
             });
           });

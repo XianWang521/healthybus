@@ -2,10 +2,16 @@ import 'ui_view/tripcard_view.dart';
 import 'package:flutter/material.dart';
 import '../logout.dart';
 import '../app_theme.dart';
+import 'package:dio/dio.dart';
+import '../util/toast_util.dart';
+import '../util/server_util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 
 class TripScreen extends StatefulWidget {
-  const TripScreen({Key key, this.animationController}) : super(key: key);
-
+  const TripScreen({Key key, this.animationController, this.username}) : super(key: key);
+  final String username;
   final AnimationController animationController;
   @override
   _TripScreenState createState() => _TripScreenState();
@@ -52,8 +58,18 @@ class _TripScreenState extends State<TripScreen>
     super.initState();
   }
 
-  void addAllListData() {
+  void addAllListData() async{
     const int count = 3;
+    Dio dio = new Dio();
+    dio.options.baseUrl = Server.base;
+    var cookieJar = CookieJar();
+    dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
+    try {
+      Response response = await dio.get("/get_trip");
+      print(response);
+    } catch (e) {
+      ToastUtil.toast(context, "网络连接错误");
+    }
 
     listViews.add(
       TripCardView(
@@ -64,7 +80,6 @@ class _TripScreenState extends State<TripScreen>
         animationController: widget.animationController,
       ),
     );
-
 
   }
 
