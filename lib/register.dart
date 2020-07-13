@@ -243,7 +243,7 @@ class _Register extends State<Register> {
                     .withOpacity(0.8),fontSize: 25, fontWeight: FontWeight.w800),
               ),
               new SizedBox(
-                height: 70,
+                height: 40,
               ),
               new TextField(
                 controller: phoneController,
