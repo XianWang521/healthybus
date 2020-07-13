@@ -5,6 +5,7 @@ import 'usermain.dart';
 import 'package:dio/dio.dart';
 import 'util/toast_util.dart';
 import 'util/server_util.dart';
+import 'app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -28,7 +29,7 @@ class _LoginState extends State<Login> {
     setState(() {
       loadingDialog = new Container(
           constraints: BoxConstraints.expand(),
-          color: Color(0x00000000),
+          color: AppTheme.background,
           child: new Center(
             child: new CircularProgressIndicator(),
           ));
@@ -146,7 +147,8 @@ class _LoginState extends State<Login> {
                 children: <Widget>[
                   new Text(
                     "Log in",
-                    style: new TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                    style: new TextStyle(color: AppTheme.nearlyDarkBlue
+                        .withOpacity(0.8),fontSize: 25, fontWeight: FontWeight.w800),
                   ),
                   new SizedBox(
                     height: 70,
@@ -189,7 +191,8 @@ class _LoginState extends State<Login> {
                     child: new RaisedButton(
                       child: new Text("Log in",
                           style: new TextStyle(color: Colors.white)),
-                      color: Colors.black,
+                      color: AppTheme.nearlyDarkBlue
+                          .withOpacity(0.6),
                       elevation: 15.0,
                       shape: StadiumBorder(),
                       splashColor: Colors.white54,

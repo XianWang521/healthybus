@@ -30,7 +30,7 @@ class LinkView extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 16, bottom: 16),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 215, 224, 249),//AppTheme.white,
+                            color: Color.fromARGB(255, 215, 224, 249),
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(8.0),
                                 bottomLeft: Radius.circular(8.0),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'app_theme.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -74,7 +75,8 @@ class _Register extends State<Register> {
             children: <Widget>[
               new Text(
                 "Sign up",
-                style: new TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                style: new TextStyle(color:AppTheme.nearlyDarkBlue
+                    .withOpacity(0.8),fontSize: 25, fontWeight: FontWeight.w800),
               ),
               new SizedBox(
                 height: 70,
@@ -144,7 +146,8 @@ class _Register extends State<Register> {
                 child: new RaisedButton(
                   child: new Text("Sign up",
                       style: new TextStyle(color: Colors.white)),
-                  color: Colors.black,
+                  color: AppTheme.nearlyDarkBlue
+                      .withOpacity(0.6),
                   elevation: 15.0,
                   shape: StadiumBorder(),
                   splashColor: Colors.white54,
