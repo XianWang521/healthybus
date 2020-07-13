@@ -93,7 +93,7 @@ class _Register extends State<Register> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 decoration: new InputDecoration(
-                  labelText: "Captcha",
+                  labelText: "Verification Code",
                   suffix: new GestureDetector(
                     onTap: (){
                       if (countdownTime==0){
@@ -101,7 +101,7 @@ class _Register extends State<Register> {
                       }
                     },
                     child: Text(
-                      countdownTime>0?"${countdownTime}s后重新获取":"获取验证码",
+                      countdownTime>0?"Try again in ${countdownTime}s":"Send",
                       style: TextStyle(
                           color: Colors.grey//Color.fromRGBO(21, 201, 187, 1)
                       ),

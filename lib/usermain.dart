@@ -89,7 +89,7 @@ class BottomNavigationWidgetState extends State<UserMain> {
  */
 import 'package:flutter/material.dart';
 import 'user/user.dart';
-import 'trip.dart';
+import 'trip/trip.dart';
 import 'pay/pay.dart';
 import 'balance/balance.dart';
 import 'util/passengerInfo_util.dart';
@@ -199,7 +199,7 @@ class BottomNavigationWidgetState extends State<UserMain> with TickerProviderSta
               }else if(index == 2){
                 tabBody = BalanceScreen(animationController: animationController);
               }else{
-                tabBody = TripScreen();
+                tabBody = TripScreen(animationController: animationController);
               }
             });
           });
