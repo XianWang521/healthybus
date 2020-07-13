@@ -65,27 +65,7 @@ class _TripScreenState extends State<TripScreen>
     const int count = 6;
     int i;
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey("phone")&&prefs.containsKey("password")){
-      this.phone = prefs.getString("phone");
-      this.password = prefs.getString("password");
-
-      var dio = Dio();
-      dio.options.baseUrl = Server.base;
-      var cookieJar = CookieJar();
-      dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
-      try {
-        Response response = await dio.post("/passenger_login", data: {"phone":this.phone, "password":this.password});
-        if (response.data["msg"] == "login success"){
-          response = await dio.get("/get_trip");
-          print(response);
-        }
-      } catch (e) {
-        ToastUtil.toast(context, "网络连接错误");
-      }
-    }
-
-    posts.add(Post(id_car: '浙B1234', turn: 2, date: DateTime.now()));
+    posts = tripInfo().getPosts();
     for(i=0;i<posts.length;i++){
       listViews.add(
         TripCardView(
@@ -95,9 +75,8 @@ class _TripScreenState extends State<TripScreen>
               Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
           animationController: widget.animationController,
           id_car: posts[i].id_car,
-          turn: posts[i].turn.toString(),
-          date: posts[i].date.year.toString()+'年'+posts[i].date.month.toString()+'月'+posts[i].date.day.toString()+'日'
-            +posts[i].date.hour.toString()+'点'+posts[i].date.minute.toString()+'分'+posts[i].date.second.toString()+'秒'
+          turn: posts[i].turn,
+          date: posts[i].date
         ),
       );
     }
