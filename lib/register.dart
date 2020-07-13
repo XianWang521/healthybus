@@ -2,6 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app_theme.dart';
+import 'dart:math';
+import 'package:dio/dio.dart';
+import 'util/toast_util.dart';
+import 'util/server_util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'usermain.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -9,6 +15,164 @@ class Register extends StatefulWidget {
 }
 
 class _Register extends State<Register> {
+
+  //手机号的控制器
+  TextEditingController phoneController = TextEditingController();
+
+  //验证码的控制器
+  TextEditingController vericodeController = TextEditingController();
+
+  //用户名的控制器
+  TextEditingController usernameController = TextEditingController();
+
+  //密码的控制器
+  TextEditingController passController = TextEditingController();
+
+  //二次密码的控制器
+  TextEditingController passagainController = TextEditingController();
+
+  // 加载进度条
+  Container loadingDialog;
+
+  // 显示加载进度条
+  showLoadingDialog() {
+    setState(() {
+      loadingDialog = new Container(
+          constraints: BoxConstraints.expand(),
+          color: AppTheme.background,
+          child: new Center(
+            child: new CircularProgressIndicator(),
+          ));
+    });
+  }
+
+
+  // 隐藏加载进度条
+  hideLoadingDialog() {
+    setState(() {
+      loadingDialog = new Container();
+    });
+  }
+
+  int nonce;
+
+  //获取随机N位数
+  int _randomBit(int len) {
+    String scopeF = "123456789";//首位
+    String scopeC = "0123456789";//中间
+    String result = "";
+    for (int i = 0; i < len; i++) {
+      if (i == 1) {
+        result = scopeF[Random().nextInt(scopeF.length)];
+      } else {
+        result = result + scopeC[Random().nextInt(scopeC.length)];
+      }
+    }
+    return int.parse(result);
+  }
+
+  //发送验证码
+  void getcode() async {
+    if (phoneController.text.length != 11) {
+      ToastUtil.toast(context, "请输入11位手机号码");
+    } else {
+      if (countdownTime==0){
+        startCountdown();
+      }
+      Dio dio = new Dio();
+      dio.options.baseUrl = Server.base;
+      try {
+        print(phoneController.text);
+        nonce = _randomBit(10);
+        Response response = await dio.post("/get_code", data: {"phone":phoneController.text, "nonce":nonce});
+        print(response.data.toString());
+        if (response.data["status"] == "ok") {
+          String msg = response.data["msg"];
+          print(msg);
+          if (msg == "code is sent") {
+            print(response.data["code"]);
+          }else{
+            ToastUtil.toast(context, "发送验证码错误");
+          }
+        } else {
+          ToastUtil.toast(context, "发送验证码错误");
+        }
+      } catch (e) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx and is also not 304.
+        ToastUtil.toast(context, "网络连接错误");
+      } finally {
+      }
+    }
+  }
+
+  //注册
+  void _register() async {
+    if (phoneController.text.length != 11) {
+      ToastUtil.toast(context, "请输入11位手机号码");
+    } else if (vericodeController.text.length == 0) {
+      ToastUtil.toast(context, "验证码不能为空");
+    } else if (usernameController.text.length == 0) {
+      ToastUtil.toast(context, "用户名不能为空");
+    } else if (passController.text.length == 0) {
+      ToastUtil.toast(context, "密码不能为空");
+    } else if (passagainController.text.length == 0) {
+      ToastUtil.toast(context, "请再次输入密码");
+    } else if (passagainController.text != passController.text) {
+      ToastUtil.toast(context, "请保证两次密码相同");
+    } else {
+      showLoadingDialog();
+      Dio dio = new Dio();
+      dio.options.baseUrl = Server.base;
+      try {
+        print(phoneController.text);
+        print(vericodeController.text);
+        print(usernameController.text);
+        print(passController.text);
+        Response response = await dio.post("/passenger_register", data: {"phone":phoneController.text, "username":usernameController.text,"password":passController.text,"nonce":nonce,"health":0,"code":vericodeController.text});
+        print(response.data.toString());
+        if (response.data["status"] == "ok") {
+          String msg = response.data["msg"];
+          print(msg);
+          if (msg == "register success") {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setString("phone", phoneController.text);
+            prefs.setString("password", passController.text);
+            Navigator.of(context).pushAndRemoveUntil(
+                new MaterialPageRoute(builder: (context) => new UserMain(username: phoneController.text)
+                ), (route) => route == null);
+          }else{
+            ToastUtil.toast(context, "未知错误");
+          }
+        } else {
+          String msg = response.data["msg"];
+          print(msg);
+          if (msg == "database error") {
+            ToastUtil.toast(context, "账号已注册");
+          } else if (msg == "wrong code") {
+            ToastUtil.toast(context, "验证码错误");
+          }
+          else{
+            ToastUtil.toast(context, "未知错误");
+          }
+        }
+      } catch (e) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx and is also not 304.
+        ToastUtil.toast(context, "网络连接错误");
+      } finally {
+        hideLoadingDialog();
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    hideLoadingDialog();
+  }
+
+
   bool eye = true;
 
   void _toggle() {
@@ -82,7 +246,12 @@ class _Register extends State<Register> {
                 height: 70,
               ),
               new TextField(
-                keyboardType: TextInputType.text,
+                controller: phoneController,
+                inputFormatters: [
+                  WhitelistingTextInputFormatter.digitsOnly,//只能输入数字
+                  LengthLimitingTextInputFormatter(11)//11位
+                ],
+                keyboardType: TextInputType.number,
                 autocorrect: false,
                 decoration: new InputDecoration(
                   labelText: "Phone Number",
@@ -92,15 +261,14 @@ class _Register extends State<Register> {
                 height: 30,
               ),
               new TextField(
+                controller: vericodeController,
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 decoration: new InputDecoration(
                   labelText: "Verification Code",
                   suffix: new GestureDetector(
                     onTap: (){
-                      if (countdownTime==0){
-                        startCountdown();
-                      }
+                      getcode();
                     },
                     child: Text(
                       countdownTime>0?"Try again in ${countdownTime}s":"Send",
@@ -115,6 +283,7 @@ class _Register extends State<Register> {
                 height: 30,
               ),
               new TextField(
+                controller: usernameController,
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 decoration: new InputDecoration(
@@ -125,10 +294,29 @@ class _Register extends State<Register> {
                 height: 30,
               ),
               new TextField(
+                controller: passController,
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 decoration: new InputDecoration(
                   labelText: "Password",
+                  suffixIcon: new GestureDetector(
+                    child: new Icon(
+                      Icons.remove_red_eye,
+                    ),
+                    onTap: _toggle,
+                  ),
+                ),
+                obscureText: eye,
+              ),
+              new SizedBox(
+                height: 30,
+              ),
+              new TextField(
+                controller: passagainController,
+                keyboardType: TextInputType.text,
+                autocorrect: false,
+                decoration: new InputDecoration(
+                  labelText: "Password again",
                   suffixIcon: new GestureDetector(
                     child: new Icon(
                       Icons.remove_red_eye,
@@ -151,7 +339,9 @@ class _Register extends State<Register> {
                   elevation: 15.0,
                   shape: StadiumBorder(),
                   splashColor: Colors.white54,
-                  onPressed: () {},
+                  onPressed: () {
+                    _register();
+                  },
                 ),
               ),
               new SizedBox(height: 60),
