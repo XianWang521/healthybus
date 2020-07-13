@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../app_theme.dart';
+import '../../util/passengetInfo_util.dart';
+import 'topup_view.dart';
+import 'withdraw_view.dart';
 
 class BalanceCardView extends StatelessWidget {
   final AnimationController animationController;
@@ -10,6 +13,18 @@ class BalanceCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String alert;
+    Color alertColor;
+    IconData alertIcon;
+    if (passengerInfo().getBalance()<10){
+      alert = "Insufficient Balance!";
+      alertColor = Color.fromARGB(255, 246, 82, 131);
+      alertIcon = Icons.error_outline;
+    } else {
+      alert = "Sufficient Balance!";
+      alertColor = Colors.green;
+      alertIcon = Icons.check_circle_outline;
+    }
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -49,12 +64,12 @@ class BalanceCardView extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 4, bottom: 3),
                                       child: Text(
-                                        '¥ 0.00',
+                                        "¥"+passengerInfo().getBalance().toString()+"0",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: AppTheme.fontName,
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 50,
+                                          fontSize: 45,
                                           color: AppTheme.nearlyDarkBlue,
                                         ),
                                       ),
@@ -133,21 +148,21 @@ class BalanceCardView extends StatelessWidget {
                                           width: 24,
                                           height: 24,
                                           child: Icon(
-                                            Icons.error_outline,
-                                            color: Color.fromARGB(255, 246, 82, 131),
+                                            alertIcon,
+                                            color: alertColor,
                                             size: 20,
                                           ),
                                         ),
                                         Flexible(
                                           child: Text(
-                                            'Insufficient Balance!',
+                                            alert,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               fontFamily: AppTheme.fontName,
                                               fontWeight: FontWeight.w500,
                                               fontSize: 16,
                                               letterSpacing: 0.0,
-                                              color: Color.fromARGB(255, 246, 82, 131)
+                                              color: alertColor,
                                             ),
                                           ),
                                         ),
@@ -227,7 +242,11 @@ class BalanceCardView extends StatelessWidget {
                                                 highlightColor: Colors.transparent,
                                                 focusColor: Colors.transparent,
                                                 onTap: () {
-
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => TopUpScreen()),
+                                                  );
+                                                  //Navigator.push(context, PopRoute(child: TopupWidget()));
                                                 },
                                                 child: Icon(
                                                   Icons.add,
@@ -307,7 +326,10 @@ class BalanceCardView extends StatelessWidget {
                                                 highlightColor: Colors.transparent,
                                                 focusColor: Colors.transparent,
                                                 onTap: () {
-
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => WithDrawScreen()),
+                                                  );
                                                 },
                                                 child: Icon(
                                                   Icons.remove,
