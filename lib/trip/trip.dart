@@ -8,6 +8,7 @@ import '../util/server_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import '../util/tripinfo_util.dart';
 
 class TripScreen extends StatefulWidget {
   const TripScreen({Key key, this.animationController, this.username}) : super(key: key);
@@ -24,7 +25,9 @@ class _TripScreenState extends State<TripScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
-
+  String phone;
+  String password;
+  List<Post> posts = [];
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -59,31 +62,45 @@ class _TripScreenState extends State<TripScreen>
   }
 
   void addAllListData() async{
-    const int count = 3;
-    Dio dio = new Dio();
-    dio.options.baseUrl = Server.base;
-    var cookieJar = CookieJar();
-    dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
-    try {
-      Response response = await dio.get("/get_trip");
-      print(response);
-    } catch (e) {
-      ToastUtil.toast(context, "网络连接错误");
+    const int count = 6;
+    int i;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("phone")&&prefs.containsKey("password")){
+      this.phone = prefs.getString("phone");
+      this.password = prefs.getString("password");
+
+      var dio = Dio();
+      dio.options.baseUrl = Server.base;
+      var cookieJar = CookieJar();
+      dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
+      try {
+        Response response = await dio.post("/passenger_login", data: {"phone":this.phone, "password":this.password});
+        if (response.data["msg"] == "login success"){
+          response = await dio.get("/get_trip");
+          print(response);
+        }
+      } catch (e) {
+        ToastUtil.toast(context, "网络连接错误");
+      }
     }
 
-
-
-
-    listViews.add(
-      TripCardView(
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-            Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
-      ),
-    );
-
+    posts.add(Post(id_car: '浙B1234', turn: 2, date: DateTime.now()));
+    for(i=0;i<posts.length;i++){
+      listViews.add(
+        TripCardView(
+          animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+              parent: widget.animationController,
+              curve:
+              Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
+          animationController: widget.animationController,
+          id_car: posts[i].id_car,
+          turn: posts[i].turn.toString(),
+          date: posts[i].date.year.toString()+'年'+posts[i].date.month.toString()+'月'+posts[i].date.day.toString()+'日'
+            +posts[i].date.hour.toString()+'点'+posts[i].date.minute.toString()+'分'+posts[i].date.second.toString()+'秒'
+        ),
+      );
+    }
   }
 
   Future<bool> getData() async {
@@ -99,16 +116,17 @@ class _TripScreenState extends State<TripScreen>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            getMainListViewUI(),
             getAppBarUI(),
+            getMainListViewUI(),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
-            )
+            ),
           ],
         ),
       ),
     );
   }
+  
 
   Widget getMainListViewUI() {
     return FutureBuilder<bool>(

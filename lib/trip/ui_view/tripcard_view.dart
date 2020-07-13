@@ -4,8 +4,10 @@ import '../../app_theme.dart';
 class TripCardView extends StatelessWidget {
   final AnimationController animationController;
   final Animation animation;
-
-  const TripCardView({Key key, this.animationController, this.animation})
+  final String id_car;
+  final String date;
+  final String turn;
+  const TripCardView({Key key, this.animationController, this.animation, this.id_car, this.turn, this.date})
       : super(key: key);
 
   @override
@@ -64,7 +66,27 @@ class TripCardView extends StatelessWidget {
                                           top: 16,
                                         ),
                                         child: Text(
-                                          "Account Balance",
+                                          this.id_car,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily:
+                                            AppTheme.fontName,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 25,
+                                            letterSpacing: 0.0,
+                                            color:
+                                            AppTheme.nearlyDarkBlue,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 25,
+                                          right: 16,
+                                          top: 16,
+                                        ),
+                                        child: Text(
+                                          this.turn,
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontFamily:
@@ -87,12 +109,12 @@ class TripCardView extends StatelessWidget {
                                       right: 16,
                                     ),
                                     child: Text(
-                                      "¥0.00",
+                                      this.date,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: AppTheme.fontName,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 50,
+                                        fontSize: 10,
                                         letterSpacing: 0.0,
                                         color: AppTheme.grey
                                             .withOpacity(0.5),
