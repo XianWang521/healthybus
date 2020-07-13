@@ -4,6 +4,7 @@ import 'trip/trip.dart';
 import 'pay/pay.dart';
 import 'balance/balance.dart';
 import 'util/passengetInfo_util.dart';
+import 'util/tripinfo_util.dart';
 
 class UserMain extends StatefulWidget {
   final String username;
@@ -113,8 +114,8 @@ class BottomNavigationWidgetState extends State<UserMain> with TickerProviderSta
                 passengerInfo().initget(context);
                 tabBody = BalanceScreen(animationController: animationController);
               }else{
-                passengerInfo().initget(context);
-                tabBody = TripScreen(animationController: animationController, username: widget.username);
+                tripInfo().initget(context);
+                tabBody = TripScreen(animationController: animationController);
               }
             });
           });

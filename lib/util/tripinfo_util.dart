@@ -18,6 +18,7 @@ class tripInfo{
   int turn;
   String phone;
   String password;
+  String username;
   List<Post> posts= [];
 
   void initget(context) async{
@@ -35,7 +36,7 @@ class tripInfo{
         if (response.data["msg"] == "login success"){
           response = await dio.get("/get_trip");
           print(response);
-          if(response.data['info'].length != 0 && response.data['msg'] != "bad request") {
+          if(response.data['msg'] != "bad request" && response.data['info'].length != 0) {
             for (int i = 0; i < response.data['info'].length; i++) {
               posts.add(Post(id_car: response.data['info'][i].id_car,
                   turn: response.data['info'][i].turn.toString(),
@@ -46,11 +47,11 @@ class tripInfo{
             print(response);
           }
           else{
-            posts.add(Post(id_car: 'N/A',
-                turn: 'N/A',
-                date: 'N/A'));
-            print(response);
+            posts.add(Post(id_car: "N/A",
+                turn: "N/A",
+                date: "N/A"));
           }
+          print(this.posts[0].turn);
         }
       } catch (e) {
         ToastUtil.toast(context, "网络连接错误");
@@ -58,7 +59,7 @@ class tripInfo{
     }
   }
 
-  List<Post> getPosts() {
+  List<Post> getPosts(){
     return this.posts;
   }
 }

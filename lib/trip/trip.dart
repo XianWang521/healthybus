@@ -2,17 +2,10 @@ import 'ui_view/tripcard_view.dart';
 import 'package:flutter/material.dart';
 import '../logout.dart';
 import '../app_theme.dart';
-import 'package:dio/dio.dart';
-import '../util/toast_util.dart';
-import '../util/server_util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:cookie_jar/cookie_jar.dart';
 import '../util/tripinfo_util.dart';
 
 class TripScreen extends StatefulWidget {
-  const TripScreen({Key key, this.animationController, this.username}) : super(key: key);
-  final String username;
+  const TripScreen({Key key, this.animationController}) : super(key: key);
   final AnimationController animationController;
   @override
   _TripScreenState createState() => _TripScreenState();
@@ -61,11 +54,11 @@ class _TripScreenState extends State<TripScreen>
     super.initState();
   }
 
-  void addAllListData() async{
+  void addAllListData(){
     const int count = 6;
     int i;
-
     posts = tripInfo().getPosts();
+
     for(i=0;i<posts.length;i++){
       listViews.add(
         TripCardView(
