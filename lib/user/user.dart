@@ -186,7 +186,7 @@ class _UserScreenState extends State<UserScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'User Info',
+                                  'Weclome, bus!',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,

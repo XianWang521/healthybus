@@ -1,8 +1,12 @@
+import 'package:flutter/services.dart';
+
 import 'ui_view/qr_view.dart';
 import 'package:flutter/material.dart';
 import '../logout.dart';
 import '../app_theme.dart';
 import 'ui_view/notice_view.dart';
+import 'package:barcode_scan/barcode_scan.dart';
+
 
 class PayScreen extends StatefulWidget {
   const PayScreen({Key key, this.animationController, this.username, this.healthcode}) : super(key: key);
@@ -17,6 +21,8 @@ class PayScreen extends StatefulWidget {
 class _PayScreenState extends State<PayScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
+
+  String barcode = "";
 
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
@@ -89,7 +95,7 @@ class _PayScreenState extends State<PayScreen>
     await Future<dynamic>.delayed(const Duration(milliseconds: 50));
     return true;
   }
-
+//  String barcode = "";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -110,31 +116,79 @@ class _PayScreenState extends State<PayScreen>
   }
 
   Widget getMainListViewUI() {
-    return FutureBuilder<bool>(
-      future: getData(),
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox();
-        } else {
-          return ListView.builder(
-            controller: scrollController,
-            padding: EdgeInsets.only(
-              top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
-            ),
-            itemCount: listViews.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
-              return listViews[index];
-            },
-          );
-        }
-      },
-    );
+//    return FutureBuilder<bool>(
+//      future: getData(),
+//      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+//        if (!snapshot.hasData) {
+//          return const SizedBox();
+//        } else {
+//          return ListView.builder(
+//            controller: scrollController,
+//            padding: EdgeInsets.only(
+//              top: AppBar().preferredSize.height +
+//                  MediaQuery.of(context).padding.top +
+//                  24,
+//              bottom: 62 + MediaQuery.of(context).padding.bottom,
+//            ),
+//            itemCount: listViews.length,
+//            scrollDirection: Axis.vertical,
+//            itemBuilder: (BuildContext context, int index) {
+//              widget.animationController.forward();
+//              return listViews[index];
+//            },
+//          );
+//        }
+//      },
+//    );
+    return Scaffold(
+        appBar: new AppBar(
+          title: new Text('QR Code Scanner'),
+        ),
+        body: new Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: RaisedButton(
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    splashColor: Colors.blueGrey,
+                    onPressed: scan,
+                    child: const Text('START CAMERA SCAN')
+                ),
+              )
+              ,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Text(barcode, textAlign: TextAlign.center,),
+              )
+              ,
+            ],
+          ),
+        ));
+
   }
+  Future scan() async {
+    try {
+      String barcode = await BarcodeScanner.scan();
+      setState(() => this.barcode = barcode);
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          this.barcode = 'The user did not grant the camera permission!';
+        });
+      } else {
+        setState(() => this.barcode = 'Unknown error: $e');
+      }
+    } on FormatException{
+      setState(() => this.barcode = 'null (User returned using the "back"-button before scanning anything. Result)');
+    } catch (e) {
+      setState(() => this.barcode = 'Unknown error: $e');
+    }
+  }
+
 
   Widget getAppBarUI() {
     return Column(
@@ -179,7 +233,7 @@ class _PayScreenState extends State<PayScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Pay',
+                                  'Scan',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,

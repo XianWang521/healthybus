@@ -174,7 +174,7 @@ class _BalanceScreenState extends State<BalanceScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Balance',
+                                  'Earnings',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontName,
