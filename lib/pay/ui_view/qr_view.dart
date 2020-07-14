@@ -89,7 +89,7 @@ class QRView extends StatelessWidget {
                                             height: 100,
                                             child: Text(
                                               "             Warning\n            Unhealthy!",
-                                              style: new TextStyle(color: health_color, fontSize: 32, fontWeight: FontWeight.w800),
+                                              style: new TextStyle(color: Color.fromARGB(255, 246, 82, 131), fontSize: 32, fontWeight: FontWeight.w800),
                                             )
                                         ):
                                         SizedBox(
@@ -97,7 +97,7 @@ class QRView extends StatelessWidget {
                                             height: 100,
                                             child: Text(
                                               "           Insufficient\n             Balance!",
-                                              style: new TextStyle(color: health_color, fontSize: 32, fontWeight: FontWeight.w800),
+                                              style: new TextStyle(color: Color.fromARGB(255, 246, 82, 131), fontSize: 32, fontWeight: FontWeight.w800),
                                             )
                                         )
                                       ),
