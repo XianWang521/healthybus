@@ -75,19 +75,31 @@ class QRView extends StatelessWidget {
                                 Container(
                                   child: Center(
                                       child:
-                                      passengerInfo().getBalance()>=2?QrImage(
+                                      passengerInfo().getBalance()>=2&&passengerInfo().getHealthcode()==0?
+                                      QrImage(
                                         data: '${this.username},${this.healthcode}',
                                         size: 250,
                                         gapless: true,
                                         errorCorrectionLevel: QrErrorCorrectLevel.Q,
                                         foregroundColor: health_color,
-                                      ):SizedBox(
-                                        width: 400,
-                                        height: 100,
-                                        child: Text(
-                                          "           Insufficient\n             Balance!",
-                                          style: new TextStyle(color: Color.fromARGB(255, 246, 82, 131), fontSize: 32, fontWeight: FontWeight.w800),
-                                        ),
+                                      ):(
+                                        passengerInfo().getHealthcode()!=0?
+                                        SizedBox(
+                                            width: 400,
+                                            height: 100,
+                                            child: Text(
+                                              "             Warning\n            Unhealthy!",
+                                              style: new TextStyle(color: Color.fromARGB(255, 246, 82, 131), fontSize: 32, fontWeight: FontWeight.w800),
+                                            )
+                                        ):
+                                        SizedBox(
+                                            width: 400,
+                                            height: 100,
+                                            child: Text(
+                                              "           Insufficient\n             Balance!",
+                                              style: new TextStyle(color: Color.fromARGB(255, 246, 82, 131), fontSize: 32, fontWeight: FontWeight.w800),
+                                            )
+                                        )
                                       ),
                                   ),
                                 ),

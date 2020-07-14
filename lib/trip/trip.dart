@@ -76,7 +76,7 @@ class _TripScreenState extends State<TripScreen>
       if (tripcount > 30){
         tripcount = 30;
       }
-      for (int i = 0; i < tripcount; i++){
+      for (int i = tripcount-1; i >= 0; i--){
         listViews.add(
           TripView(
             animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(

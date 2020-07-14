@@ -61,18 +61,21 @@ class TripView extends StatelessWidget {
                                     children: <Widget>[
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                          left: 25,
+                                          left: 16,
                                           right: 16,
-                                          top: 16,
+                                          top: 10,
+                                          bottom: 10,
                                         ),
                                         child: Text(
-                                          getTripString().getWeek(tripString)+"  "+getTripString().getDate(tripString)+"  "+"Jul"+" "+getTripString().getYear(tripString),
+                                          getTripString().getWeek(tripString)+"  "+getTripString().getDate(tripString)
+                                              +"  "+getTripString().getMonth(tripString)+" "+getTripString().getYear(tripString)
+                                              +"  "+getTripString().getTime(tripString),
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontFamily:
                                             AppTheme.fontName,
                                             fontWeight: FontWeight.w500,
-                                            fontSize: 25,
+                                            fontSize: 20,
                                             letterSpacing: 0.0,
                                             color:
                                             AppTheme.nearlyDarkBlue,
@@ -83,8 +86,8 @@ class TripView extends StatelessWidget {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 25,
-                                      bottom: 12,
+                                      left: 16,
+                                      bottom: 8,
                                       top: 8,
                                       right: 16,
                                     ),
@@ -94,7 +97,7 @@ class TripView extends StatelessWidget {
                                       style: TextStyle(
                                         fontFamily: AppTheme.fontName,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 50,
+                                        fontSize: 30,
                                         letterSpacing: 0.0,
                                         color: AppTheme.grey
                                             .withOpacity(0.5),
@@ -103,8 +106,8 @@ class TripView extends StatelessWidget {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 25,
-                                      bottom: 12,
+                                      left: 16,
+                                      bottom: 4,
                                       top: 4,
                                       right: 16,
                                     ),
