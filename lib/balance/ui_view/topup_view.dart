@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:healthybus/app_theme.dart';
 import 'package:flutter/services.dart';
 import '../moneyinput.dart';
+import '../../util/toast_util.dart';
+import '../../util/server_util.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:dio/dio.dart';
+import '../../util/passengetInfo_util.dart';
 
 
 class TopUpScreen extends StatefulWidget {
@@ -12,6 +18,11 @@ class TopUpScreen extends StatefulWidget {
 
 class _TopUpScreenState extends State<TopUpScreen> {
 
+  TextEditingController priceController = TextEditingController();
+
+  TextEditingController passController = TextEditingController();
+
+
   double distValue = 50.0;
 
   bool eye = true;
@@ -20,6 +31,54 @@ class _TopUpScreenState extends State<TopUpScreen> {
     setState(() {
       eye = !eye;
     });
+  }
+
+  void _topup() async {
+    if (priceController.text.length == 0) {
+      ToastUtil.toast(context, "请输入金额");
+    } else if (double.parse(priceController.text) <= 0){
+      ToastUtil.toast(context, "请输入大于0的金额");
+    }else if (passController.text.length == 0) {
+      ToastUtil.toast(context, "密码不能为空");
+    } else if (passController.text != passengerInfo().getPassword()) {
+      ToastUtil.toast(context, "密码错误");
+    }  else {
+      Dio dio = new Dio();
+      dio.options.baseUrl = Server.base;
+      var cookieJar = CookieJar();
+      dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
+      try {
+        Response response = await dio.post("/passenger_login", data: {"phone":passengerInfo().getPhone(), "password":passengerInfo().getPassword()});
+        print(response.data.toString());
+        if (response.data["status"] == "ok") {
+          if (response.data["msg"] == "login success") {
+            response = await dio.post("/deposit", data: {"amount": double.parse(priceController.text)});
+            if (response.data["status"] == "ok" && response.data["msg"] == "deposit success") {
+              ToastUtil.toast(context, "充值成功");
+              passengerInfo().initget(context);
+              Navigator.pop(context);
+            }else{
+              ToastUtil.toast(context, "充值失败");
+            }
+
+          }else{
+            ToastUtil.toast(context, "登录失败");
+          }
+        } else {
+          ToastUtil.toast(context, "账号或密码错误");
+        }
+      } catch (e) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx and is also not 304.
+        ToastUtil.toast(context, "网络连接错误");
+      } finally {
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -65,6 +124,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                               height: 40,
                             ),
                             new TextField(
+                              controller: priceController,
                               inputFormatters: [
                                 WhitelistingTextInputFormatter(RegExp("[0-9.]")),
                                 LengthLimitingTextInputFormatter(9),
@@ -89,6 +149,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                               height: 30,
                             ),
                             new TextField(
+                              controller: passController,
                               keyboardType: TextInputType.text,
                               autocorrect: false,
                               decoration: new InputDecoration(
@@ -97,7 +158,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                                     fontSize: 25,
                                     color: AppTheme.nearlyDarkBlue
                                         .withOpacity(0.5)),
-                                labelText: "Payment Password\n",
+                                labelText: "Password\n",
                                 suffixIcon: new GestureDetector(
                                   child: new Icon(
                                     Icons.remove_red_eye,
@@ -160,7 +221,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      Navigator.pop(context);
+                      _topup();
                     },
                     child: Center(
                       child: Text(

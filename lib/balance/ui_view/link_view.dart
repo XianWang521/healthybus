@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../app_theme.dart';
+import '../../util/passengetInfo_util.dart';
+import 'bind_view.dart';
+import 'rebind_view.dart';
 
 class LinkView extends StatelessWidget {
   final AnimationController animationController;
@@ -51,7 +54,20 @@ class LinkView extends StatelessWidget {
                               hoverColor: Colors.transparent,
                               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                               splashColor: AppTheme.nearlyDarkBlue.withOpacity(0.2),
-                              onTap: () {},
+                              onTap: () {
+                                if (passengerInfo().getIdpay()==""){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => BindScreen()),
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => RebindScreen()),
+                                  );
+                                }
+
+                              },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -92,7 +108,7 @@ class LinkView extends StatelessWidget {
                                       right: 16,
                                     ),
                                     child: Text(
-                                      "13131465139",
+                                      passengerInfo().getIdpay()==""?"Haven't bound yet":passengerInfo().getIdpay(),
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: AppTheme.fontName,
@@ -111,7 +127,7 @@ class LinkView extends StatelessWidget {
                                       right: 16,
                                     ),
                                     child: Text(
-                                      "Tap to see more detail",
+                                      passengerInfo().getIdpay()==""?"Tap to bind":"Tap to rebind or unbind",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: AppTheme.fontName,

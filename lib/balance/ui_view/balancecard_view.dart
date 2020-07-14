@@ -3,6 +3,7 @@ import '../../app_theme.dart';
 import '../../util/passengetInfo_util.dart';
 import 'topup_view.dart';
 import 'withdraw_view.dart';
+import '../../util/toast_util.dart';
 
 class BalanceCardView extends StatelessWidget {
   final AnimationController animationController;
@@ -13,18 +14,6 @@ class BalanceCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String alert;
-    Color alertColor;
-    IconData alertIcon;
-    if (passengerInfo().getBalance()<10){
-      alert = "Insufficient Balance!";
-      alertColor = Color.fromARGB(255, 246, 82, 131);
-      alertIcon = Icons.error_outline;
-    } else {
-      alert = "Sufficient Balance!";
-      alertColor = Colors.green;
-      alertIcon = Icons.check_circle_outline;
-    }
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -148,21 +137,21 @@ class BalanceCardView extends StatelessWidget {
                                           width: 24,
                                           height: 24,
                                           child: Icon(
-                                            alertIcon,
-                                            color: alertColor,
+                                            passengerInfo().getBalance()<10?Icons.error_outline:Icons.check_circle_outline,
+                                            color: passengerInfo().getBalance()<10?Color.fromARGB(255, 246, 82, 131):Colors.green,
                                             size: 20,
                                           ),
                                         ),
                                         Flexible(
                                           child: Text(
-                                            alert,
+                                            passengerInfo().getBalance()<10?"Insufficient Balance!":"Sufficient Balance!",
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                               fontFamily: AppTheme.fontName,
                                               fontWeight: FontWeight.w500,
                                               fontSize: 16,
                                               letterSpacing: 0.0,
-                                              color: alertColor,
+                                              color: passengerInfo().getBalance()<10?Color.fromARGB(255, 246, 82, 131):Colors.green,
                                             ),
                                           ),
                                         ),
@@ -242,10 +231,15 @@ class BalanceCardView extends StatelessWidget {
                                                 highlightColor: Colors.transparent,
                                                 focusColor: Colors.transparent,
                                                 onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => TopUpScreen()),
-                                                  );
+                                                  if (passengerInfo().getIdpay()==""){
+                                                    ToastUtil.toast(context, "请先绑定支付账户");
+                                                  }
+                                                  else{
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => TopUpScreen()),
+                                                    );
+                                                  }
                                                   //Navigator.push(context, PopRoute(child: TopupWidget()));
                                                 },
                                                 child: Icon(
@@ -326,10 +320,14 @@ class BalanceCardView extends StatelessWidget {
                                                 highlightColor: Colors.transparent,
                                                 focusColor: Colors.transparent,
                                                 onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => WithDrawScreen()),
-                                                  );
+                                                  if (passengerInfo().getIdpay()==""){
+                                                    ToastUtil.toast(context, "请先绑定支付账户");
+                                                  } else {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => WithDrawScreen()),
+                                                    );
+                                                  }
                                                 },
                                                 child: Icon(
                                                   Icons.remove,

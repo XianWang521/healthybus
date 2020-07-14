@@ -55,6 +55,13 @@ class passengerInfo{
     return this.phone;
   }
 
+  String getPassword(){
+    if (SpUtil.preferences.containsKey("password")){
+      return SpUtil.preferences.getString("password");
+    }
+    return this.password;
+  }
+
   String getUsername(){
     if (SpUtil.preferences.containsKey("username")){
       return SpUtil.preferences.getString("username");

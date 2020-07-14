@@ -11,14 +11,14 @@ import 'package:dio/dio.dart';
 import '../../util/passengetInfo_util.dart';
 
 
-class WithDrawScreen extends StatefulWidget {
+class BindScreen extends StatefulWidget {
   @override
-  _WithDrawScreenState createState() => _WithDrawScreenState();
+  _BindScreenState createState() => _BindScreenState();
 }
 
-class _WithDrawScreenState extends State<WithDrawScreen> {
+class _BindScreenState extends State<BindScreen> {
 
-  TextEditingController priceController = TextEditingController();
+  TextEditingController idController = TextEditingController();
 
   TextEditingController passController = TextEditingController();
 
@@ -33,18 +33,12 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
     });
   }
 
-  void _withdraw() async {
-    if (priceController.text.length == 0) {
-      ToastUtil.toast(context, "请输入金额");
-    } else if (double.parse(priceController.text) <= 0){
-      ToastUtil.toast(context, "请输入大于0的金额");
+  void _bind() async {
+    if (idController.text.length < 11) {
+      ToastUtil.toast(context, "请输入11位支付账户");
     } else if (passController.text.length == 0) {
       ToastUtil.toast(context, "密码不能为空");
-    } else if (passController.text != passengerInfo().getPassword()) {
-      ToastUtil.toast(context, "密码错误");
-    } else if (double.parse(priceController.text) > passengerInfo().getBalance()){
-      ToastUtil.toast(context, "余额不足");
-    }  else {
+    } else {
       Dio dio = new Dio();
       dio.options.baseUrl = Server.base;
       var cookieJar = CookieJar();
@@ -54,17 +48,13 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
         print(response.data.toString());
         if (response.data["status"] == "ok") {
           if (response.data["msg"] == "login success") {
-            response = await dio.post("/withdraw", data: {"amount": double.parse(priceController.text)});
-            if (response.data["status"] == "ok" && response.data["msg"] == "deposit success") {
-              ToastUtil.toast(context, "提现成功");
+            response = await dio.post("/passenger_associate", data: {"id_pay": idController.text, "password_pay": passController.text});
+            if (response.data["status"] == "ok" && response.data["msg"] == "update success") {
+              ToastUtil.toast(context, "绑定成功");
               passengerInfo().initget(context);
               Navigator.pop(context);
             }else{
-              if (response.data["msg"] == "balance is not enough"){
-                ToastUtil.toast(context, "余额不足");
-              }else {
-                ToastUtil.toast(context, "提现失败");
-              }
+              ToastUtil.toast(context, "绑定失败");
             }
 
           }else{
@@ -106,35 +96,29 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
                         child: new Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            new Row(
+                            new Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    "Withdraw here   ",
+                                    "Bind",
+                                    style: new TextStyle(color: AppTheme.nearlyDarkBlue
+                                        .withOpacity(0.8), fontSize: 45, fontWeight: FontWeight.w800),
+                                  ),
+                                  Text(
+                                    "Payment account",
                                     style: new TextStyle(color: AppTheme.nearlyDarkBlue
                                         .withOpacity(0.8), fontSize: 40, fontWeight: FontWeight.w800),
-                                  ),
-                                  SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: Icon(
-                                      Icons.account_balance,
-                                      color: AppTheme.nearlyDarkBlue
-                                          .withOpacity(0.8),
-                                      size: 50,
-                                    ),
                                   ),
                                 ]),
                             new SizedBox(
                               height: 40,
                             ),
                             new TextField(
-                              controller: priceController,
+                              controller: idController,
                               inputFormatters: [
-                                WhitelistingTextInputFormatter(RegExp("[0-9.]")),
-                                LengthLimitingTextInputFormatter(9),
-                                MoneyTextInputFormatter()
+                                WhitelistingTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(11),
                               ],
                               keyboardType: TextInputType.number,
                               autocorrect: false,
@@ -144,7 +128,7 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
                                     fontSize: 25,
                                     color: AppTheme.nearlyDarkBlue
                                         .withOpacity(0.5)),
-                                labelText: "Price Amount\n",
+                                labelText: "Payment Id\n",
                               ),
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
@@ -164,7 +148,7 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
                                     fontSize: 25,
                                     color: AppTheme.nearlyDarkBlue
                                         .withOpacity(0.5)),
-                                labelText: "Password\n",
+                                labelText: "Payment Password\n",
                                 suffixIcon: new GestureDetector(
                                   child: new Icon(
                                     Icons.remove_red_eye,
@@ -227,11 +211,11 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      _withdraw();
+                      _bind();
                     },
                     child: Center(
                       child: Text(
-                        'Apply',
+                        'Bind',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
@@ -288,7 +272,7 @@ class _WithDrawScreenState extends State<WithDrawScreen> {
             Expanded(
               child: Center(
                 child: Text(
-                  'Withdraw',
+                  'Bind',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 22,
