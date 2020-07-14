@@ -108,7 +108,7 @@ class BottomNavigationWidgetState extends State<UserMain> with TickerProviderSta
                 tabBody = UserScreen(animationController: animationController);
               }else if(index == 1){
                 passengerInfo().initget(context);
-                tabBody = PayScreen(animationController: animationController, username: passengerInfo().getUsername(), healthcode: passengerInfo().getHealthcode());
+                tabBody = PayScreen(animationController: animationController, phone: passengerInfo().getPhone(), healthcode: passengerInfo().getHealthcode());
               }else if(index == 2){
                 passengerInfo().initget(context);
                 tabBody = BalanceScreen(animationController: animationController);

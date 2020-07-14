@@ -6,10 +6,10 @@ import '../../util/passengetInfo_util.dart';
 class QRView extends StatelessWidget {
   final AnimationController animationController;
   final Animation animation;
-  final String username;
+  final String phone;
   final int healthcode;
 
-  const QRView({Key key, this.animationController, this.animation, this.username, this.healthcode})
+  const QRView({Key key, this.animationController, this.animation, this.phone, this.healthcode})
       : super(key: key);
 
   @override
@@ -77,7 +77,7 @@ class QRView extends StatelessWidget {
                                       child:
                                       passengerInfo().getBalance()>=2&&passengerInfo().getHealthcode()==0?
                                       QrImage(
-                                        data: '${this.username},${this.healthcode}',
+                                        data: '${this.phone},${this.healthcode}',
                                         size: 250,
                                         gapless: true,
                                         errorCorrectionLevel: QrErrorCorrectLevel.Q,
@@ -87,9 +87,12 @@ class QRView extends StatelessWidget {
                                         SizedBox(
                                             width: 400,
                                             height: 100,
-                                            child: Text(
+                                            child: healthcode==2?Text(
                                               "             Warning\n            Unhealthy!",
                                               style: new TextStyle(color: Color.fromARGB(255, 246, 82, 131), fontSize: 32, fontWeight: FontWeight.w800),
+                                            ):Text(
+                                              "        Health status\n       to be observed",
+                                              style: new TextStyle(color: Colors.amber, fontSize: 32, fontWeight: FontWeight.w800),
                                             )
                                         ):
                                         SizedBox(

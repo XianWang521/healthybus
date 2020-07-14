@@ -5,9 +5,9 @@ import '../app_theme.dart';
 import 'ui_view/notice_view.dart';
 
 class PayScreen extends StatefulWidget {
-  const PayScreen({Key key, this.animationController, this.username, this.healthcode}) : super(key: key);
+  const PayScreen({Key key, this.animationController, this.phone, this.healthcode}) : super(key: key);
 
-  final String username;
+  final String phone;
   final int healthcode;
   final AnimationController animationController;
   @override
@@ -78,7 +78,7 @@ class _PayScreenState extends State<PayScreen>
             curve:
             Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
-        username: widget.username,
+        phone: widget.phone,
         healthcode: widget.healthcode,
       ),
     );
