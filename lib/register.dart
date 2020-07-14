@@ -36,6 +36,9 @@ class _Register extends State<Register> {
   // 加载进度条
   Container loadingDialog;
 
+  //
+  int healthcode=0;
+
   // 显示加载进度条
   showLoadingDialog() {
     setState(() {
@@ -133,7 +136,7 @@ class _Register extends State<Register> {
         print(vericodeController.text);
         print(usernameController.text);
         print(passController.text);
-        Response response = await dio.post("/passenger_register", data: {"phone":phoneController.text, "username":usernameController.text,"password":passController.text,"nonce":nonce,"health":0,"code":vericodeController.text});
+        Response response = await dio.post("/passenger_register", data: {"phone":phoneController.text, "username":usernameController.text,"password":passController.text,"nonce":nonce,"health":this.healthcode,"code":vericodeController.text});
         print(response.data.toString());
         if (response.data["status"] == "ok") {
           String msg = response.data["msg"];
@@ -345,6 +348,53 @@ class _Register extends State<Register> {
               new SizedBox(
                 height: 30,
               ),
+              new Text("Choose health code: "),
+              new SizedBox(
+                height: 10,
+              ),
+              new Row(
+                children: <Widget>[
+
+                  new Radio(
+                    value: 0,
+                    groupValue: this.healthcode,
+                    onChanged: (v) {
+                      setState(() {
+                        this.healthcode = v;
+                      });
+                    },
+                    activeColor: Colors.green,
+                  ),
+                  new Text("Green"),
+
+                  new Radio(
+                    value: 1,
+                    groupValue: this.healthcode,
+                    onChanged: (v) {
+                      setState(() {
+                        this.healthcode = v;
+                      });
+                    },
+                    activeColor: Colors.amber,
+                  ),
+                  new Text("Yellow"),
+
+                  new Radio(
+                    value: 2,
+                    groupValue: this.healthcode,
+                    onChanged: (v) {
+                      setState(() {
+                        this.healthcode = v;
+                      });
+                    },
+                    activeColor: Colors.red,
+                  ),
+                  new Text("Red"),
+                ],
+              ),
+
+
+
               new SizedBox(
                 height: 50,
                 child: new RaisedButton(
@@ -361,6 +411,7 @@ class _Register extends State<Register> {
                 ),
               ),
               new SizedBox(height: 60),
+
             ],
           ),
         ),
