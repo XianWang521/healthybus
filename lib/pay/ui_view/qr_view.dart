@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../app_theme.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../util/passengetInfo_util.dart';
+
 class QRView extends StatelessWidget {
   final AnimationController animationController;
   final Animation animation;
@@ -73,13 +75,20 @@ class QRView extends StatelessWidget {
                                 Container(
                                   child: Center(
                                       child:
-                                      QrImage(
+                                      passengerInfo().getBalance()>=2?QrImage(
                                         data: '${this.username},${this.healthcode}',
                                         size: 250,
                                         gapless: true,
                                         errorCorrectionLevel: QrErrorCorrectLevel.Q,
                                         foregroundColor: health_color,
-                                      )
+                                      ):SizedBox(
+                                        width: 400,
+                                        height: 100,
+                                        child: Text(
+                                          "           Insufficient\n             Balance!",
+                                          style: new TextStyle(color: Color.fromARGB(255, 246, 82, 131), fontSize: 32, fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
                                   ),
                                 ),
                               ),

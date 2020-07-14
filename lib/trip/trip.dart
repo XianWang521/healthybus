@@ -1,11 +1,13 @@
-import 'ui_view/tripcard_view.dart';
 import 'package:flutter/material.dart';
+import 'package:healthybus/util/passengetInfo_util.dart';
 import '../logout.dart';
 import '../app_theme.dart';
-import '../util/tripinfo_util.dart';
+import 'ui_view/trip_view.dart';
+import 'ui_view/notrip_view.dart';
 
 class TripScreen extends StatefulWidget {
   const TripScreen({Key key, this.animationController}) : super(key: key);
+
   final AnimationController animationController;
   @override
   _TripScreenState createState() => _TripScreenState();
@@ -18,9 +20,7 @@ class _TripScreenState extends State<TripScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
-  String phone;
-  String password;
-  List<Post> posts = [];
+
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -54,25 +54,42 @@ class _TripScreenState extends State<TripScreen>
     super.initState();
   }
 
-  void addAllListData(){
-    const int count = 6;
-    int i;
-    posts = tripInfo().getPosts();
 
-    for(i=0;i<posts.length;i++){
+
+  void addAllListData() {
+    List<String> trip = passengerInfo().getTrip();
+    int tripcount = trip.length;
+    int count = tripcount+3;
+
+    if (tripcount == 0 ){
       listViews.add(
-        TripCardView(
+        NoTripView(
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
               parent: widget.animationController,
               curve:
-              Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
+              Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
           animationController: widget.animationController,
-          id_car: posts[i].id_car,
-          turn: posts[i].turn,
-          date: posts[i].date
         ),
       );
     }
+    else {
+      if (tripcount > 30){
+        tripcount = 30;
+      }
+      for (int i = 0; i < tripcount; i++){
+        listViews.add(
+          TripView(
+            animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                parent: widget.animationController,
+                curve:
+                Interval((1 / count) * (i+1), 1.0, curve: Curves.fastOutSlowIn))),
+            animationController: widget.animationController,
+            tripString: trip[i],
+          ),
+        );
+      }
+    }
+
   }
 
   Future<bool> getData() async {
@@ -88,17 +105,16 @@ class _TripScreenState extends State<TripScreen>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            getAppBarUI(),
             getMainListViewUI(),
+            getAppBarUI(),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
-            ),
+            )
           ],
         ),
       ),
     );
   }
-  
 
   Widget getMainListViewUI() {
     return FutureBuilder<bool>(
@@ -233,3 +249,4 @@ class _TripScreenState extends State<TripScreen>
     );
   }
 }
+

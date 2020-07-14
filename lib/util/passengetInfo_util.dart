@@ -11,6 +11,7 @@ class passengerInfo{
   double balance = 0.0;
   int healthcode = 0;
   String id_pay = "";
+  List<String> trip = [];
 
   void initget(context) async{
     if (SpUtil.preferences.containsKey("phone")&&SpUtil.preferences.containsKey("password")){
@@ -41,6 +42,20 @@ class passengerInfo{
           SpUtil.preferences.setDouble("balance", this.balance);
           SpUtil.preferences.setInt("healthcode", this.healthcode);
           SpUtil.preferences.setString("id_pay", this.id_pay);
+
+
+          response = await dio.get("/get_trip");
+          if (response.data['info'].length>0){
+            for (int i = 0; i < response.data['info'].length; i++){
+              String combine = response.data['info'][i][2].toString().length.toString()+response.data['info'][i][3].toString().length.toString();
+              combine = combine + response.data['info'][i][0].toString() + response.data['info'][i][1] + response.data['info'][i][2].toString() + response.data['info'][i][3].toString();
+              this.trip.add(combine);
+            }
+            SpUtil.preferences.setStringList("trip", this.trip);
+          }
+
+
+
         }
       } catch (e) {
         ToastUtil.toast(context, "网络连接错误");
@@ -89,4 +104,11 @@ class passengerInfo{
      }
      return this.id_pay;
    }
+
+  List<String> getTrip(){
+    if (SpUtil.preferences.containsKey("trip")){
+      return SpUtil.preferences.getStringList("trip");
+    }
+    return this.trip;
+  }
 }

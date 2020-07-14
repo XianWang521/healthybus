@@ -78,6 +78,19 @@ class _HomeScreenState extends State<HomeScreen> {
             SpUtil.preferences.setDouble("balance", response.data["info"][2]);
             SpUtil.preferences.setInt("healthcode", response.data["info"][3]);
             SpUtil.preferences.setString("id_pay", response.data["info"][4]);
+
+            List<String> trip = [];
+
+            response = await dio.get("/get_trip");
+            if (response.data['info'].length>0){
+              for (int i = 0; i < response.data['info'].length; i++){
+                String combine = response.data['info'][i][2].toString().length.toString()+response.data['info'][i][3].toString().length.toString();
+                combine = combine + response.data['info'][i][0].toString() + response.data['info'][i][1] + response.data['info'][i][2].toString() + response.data['info'][i][3].toString();
+                trip.add(combine);
+              }
+              SpUtil.preferences.setStringList("trip", trip);
+            }
+
             return ph;
           }
         } catch (e) {
