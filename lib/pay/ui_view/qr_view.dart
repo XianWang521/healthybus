@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import '../../app_theme.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../util/passengetInfo_util.dart';
+import 'package:dio/dio.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import '../../util/server_util.dart';
+import '../../util/toast_util.dart';
+import '../../util/Sp_util.dart';
 
 class QRView extends StatelessWidget {
   final AnimationController animationController;
@@ -11,6 +17,34 @@ class QRView extends StatelessWidget {
 
   const QRView({Key key, this.animationController, this.animation, this.phone, this.healthcode})
       : super(key: key);
+
+  void freshToken(context) async{
+    Dio dio = new Dio();
+    dio.options.baseUrl = Server.base;
+    var cookieJar = CookieJar();
+    dio.interceptors..add(LogInterceptor())..add(CookieManager(cookieJar));
+    try{
+      Response response = await dio.post("/passenger_login", data: {"phone":passengerInfo().getPhone(), "password":passengerInfo().getPassword()});
+      if (response.data["status"] == "ok"&&response.data["msg"]=="login success"){
+        response = await dio.get("/make_pay");
+        if (response.data["status"] == "ok" && response.data["msg"] == "request succeed"){
+          SpUtil.preferences.setString("token", response.data["token"]);
+          SpUtil.preferences.setString("time", response.data["time"]);
+        }
+        else{
+          ToastUtil.toast(context, "获取交易值失败");
+        }
+      }
+      else{
+        ToastUtil.toast(context, "登录值失败");
+      }
+    } catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      ToastUtil.toast(context, "网络连接错误");
+    } finally {
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +58,22 @@ class QRView extends StatelessWidget {
     }
     else{
       health_color = Colors.green;
+    }
+    
+    String token;
+    String time;
+    if (SpUtil.preferences.containsKey("time")){
+      time = SpUtil.preferences.getString("time");
+    }
+    else{
+      time = "";
+    }
+
+    if (SpUtil.preferences.containsKey("token")){
+      token = SpUtil.preferences.getString("token");
+    }
+    else{
+      token = "";
     }
 
     return AnimatedBuilder(
@@ -67,7 +117,7 @@ class QRView extends StatelessWidget {
                               hoverColor: Colors.transparent,
                               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                               splashColor: AppTheme.nearlyDarkBlue.withOpacity(0.2),
-                              onTap: () {},
+                              onTap: () {freshToken(context);},
                               child: Padding(
                                 padding:
                                 const EdgeInsets.only(left: 16, right: 16,bottom: 64, top: 64),
@@ -77,7 +127,7 @@ class QRView extends StatelessWidget {
                                       child:
                                       passengerInfo().getBalance()>=2&&passengerInfo().getHealthcode()==0?
                                       QrImage(
-                                        data: '${this.phone},${this.healthcode}',
+                                        data: '${time},${token},${this.phone}',
                                         size: 250,
                                         gapless: true,
                                         errorCorrectionLevel: QrErrorCorrectLevel.Q,

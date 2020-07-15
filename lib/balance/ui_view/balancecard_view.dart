@@ -58,7 +58,7 @@ class BalanceCardView extends StatelessWidget {
                                         style: TextStyle(
                                           fontFamily: AppTheme.fontName,
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 45,
+                                          fontSize: 40,
                                           color: AppTheme.nearlyDarkBlue,
                                         ),
                                       ),

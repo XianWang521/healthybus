@@ -151,6 +151,16 @@ class _Register extends State<Register> {
               SpUtil.preferences.setDouble("balance", response.data["info"][2]);
               SpUtil.preferences.setInt("healthcode", response.data["info"][3]);
               SpUtil.preferences.setString("id_pay", response.data["info"][4]);
+
+              response = await dio.get("/make_pay");
+              if (response.data["status"] == "ok" && response.data["msg"] == "request succeed"){
+                SpUtil.preferences.setString("token", response.data["token"]);
+                SpUtil.preferences.setString("time", response.data["time"]);
+              }
+              else{
+                ToastUtil.toast(context, "获取交易值失败");
+              }
+
               List<String> trip = [];
               SpUtil.preferences.setStringList("trip", trip);
               Navigator.of(context).pushAndRemoveUntil(
