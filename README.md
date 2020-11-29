@@ -18,7 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 ## UI
 
 <div align="center">
-    <img src="https://github.com/XianWang521/healthybus/tree/master/UI-img/Android/图片1.png" width = 850>
+    <img src="https://github.com/XianWang521/healthybus/tree/master/UI-img/Android/图片1.png" width = "850">
 </div>
 
 ## Demo link
