@@ -16,9 +16,8 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 ## UI
-
 <div align="center">
-    <img src="https://github.com/XianWang521/healthybus/tree/master/UI-img/Android/图片1.png" width = "850">
+    <img src="https://github.com/lck1201/win_det_heatmaps/raw/master/docs/example.jpg" width="850">
 </div>
 
 ## Demo link
