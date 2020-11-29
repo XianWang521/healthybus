@@ -17,7 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## UI
 <div align="center">
-    <img src="https://github.com/lck1201/win_det_heatmaps/raw/master/docs/example.jpg" width="850">
+    <img src="https://github.com/lck1201/win_det_heatmaps/raw/master/docs/example.jpg">
 </div>
 
 ## Demo link
