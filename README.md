@@ -22,6 +22,9 @@ samples, guidance on mobile development, and a full API reference.
     <img src="https://github.com/XianWang521/healthybus/blob/master/UI-img/Android/%E5%9B%BE%E7%89%873.png" width = "200">
     <img src="https://github.com/XianWang521/healthybus/blob/master/UI-img/Android/%E5%9B%BE%E7%89%874.png" width = "200">
     <img src="https://github.com/XianWang521/healthybus/blob/master/UI-img/Android/%E5%9B%BE%E7%89%875.png" width = "200">
+    <img src="https://github.com/XianWang521/healthybus/blob/master/UI-img/Android/%E5%9B%BE%E7%89%876.png" width = "200">
+    <img src="https://github.com/XianWang521/healthybus/blob/master/UI-img/Android/%E5%9B%BE%E7%89%877.png" width = "200">
+    <img src="https://github.com/XianWang521/healthybus/blob/master/UI-img/Android/%E5%9B%BE%E7%89%878.png" width = "200">
     
 </div>
 
